@@ -1,0 +1,8 @@
+*.env
+.vscode/
+.idea/
+.well-known/
+node_modules/
+*.log
+.agent/tasks/*
+.agent

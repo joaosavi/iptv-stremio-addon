@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Xtream Configuration</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="dark light">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body class="page-config">
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-inner">
+                <img src="" id="addonLogo" class="addon-logo hidden" alt="Addon Logo">
+                <div class="header-text">
+                    <h1 class="app-title" id="addonTitle">IPTV Stremio Addon</h1>
+                    <p class="subtitle" id="addonSubtitle">Stream your IPTV channels in Stremio</p>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section class="config-section">
+                <div class="card configurator-card">
+                    <h2>Xtream Configuration</h2>
+                    <form id="xtreamForm" class="config-form" autocomplete="off">
+                        <fieldset>
+                            <legend>Credentials</legend>
+                            <div class="form-group">
+                                <label for="xtreamUrl">Xtream Base URL <span class="req">*</span></label>
+                                <input type="url" id="xtreamUrl" name="xtreamUrl" required
+                                    placeholder="http://panel.example.com:8080">
+                                <small class="hint">Do not include a trailing slash.</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="xtreamUsername">Username <span class="req">*</span></label>
+                                <input type="text" id="xtreamUsername" name="xtreamUsername" required>
+                            </div>
+                            <div class="form-group password-group">
+                                <label for="xtreamPassword">Password <span class="req">*</span></label>
+                                <div class="pwd-wrapper">
+                                    <input type="password" id="xtreamPassword" name="xtreamPassword" required>
+                                    <button type="button" id="togglePwd" class="btn tiny ghost">Show</button>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend>EPG Options</legend>
+                            <div class="form-group checkbox-line">
+                                <input type="checkbox" id="enableEpg" name="enableEpg" checked>
+                                <label class="checkbox-label" for="enableEpg">Enable EPG</label>
+                            </div>
+
+                            <div id="epgModeBlock" class="form-group">
+                                <label class="group-label">EPG Source Mode</label>
+                                <div class="radio-group">
+                                    <label class="checkbox-line">
+                                        <input type="radio" name="epgMode" value="xtream" checked>
+                                        <span class="checkbox-label">Panel XMLTV</span>
+                                    </label>
+                                    <label class="checkbox-line">
+                                        <input type="radio" name="epgMode" value="custom">
+                                        <span class="checkbox-label">Custom EPG URL</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group hidden" id="customEpgGroup">
+                                <label for="customEpgUrl">Custom EPG XML URL</label>
+                                <input type="url" id="customEpgUrl" name="customEpgUrl"
+                                    placeholder="https://example.com/epg.xml">
+                                <small class="hint">Used instead of panel xmltv.php when selected.</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="epgOffsetHours">EPG Offset (hours)</label>
+                                <input type="number" step="0.25" id="epgOffsetHours" name="epgOffsetHours"
+                                    placeholder="0">
+                            </div>
+                        </fieldset>
+
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn primary wide" id="xtream-submit">Install / Update
+                                Addon</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <section class="about-section">
+                <div class="card about-card">
+                    <h2>About this Addon</h2>
+                    <p>This addon connects your IPTV service (via Xtream Codes API) to Stremio. It fetches live TV
+                        channels and optionally loads EPG data.</p>
+                    <ul class="feature-list">
+                        <li><strong>Live TV only</strong> – fetches channels from your panel (no movies or series).</li>
+                        <li><strong>Optional EPG</strong>: use panel XMLTV or a custom XMLTV URL.</li>
+                        <li><strong>EPG offset</strong> adjusts programme times for timezone correction.</li>
+                    </ul>
+                    <div class="credits">
+                        <p>Developed by <a href="https://github.com/joaosavi" target="_blank"
+                                rel="noopener">joaosavi</a>.</p>
+                        <p>Special thanks to <a href="https://github.com/Inside4ndroid" target="_blank"
+                                rel="noopener">Inside4ndroid</a>.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="loaderOverlay" class="overlay hidden">
+        <div class="overlay-box">
+            <header class="overlay-header">
+                <h2 id="loaderMessage">Starting…</h2>
+                <p class="overlay-sub" id="progressText">0%</p>
+            </header>
+            <div class="progress-track">
+                <div id="progressBar" class="progress-fill" style="width:0%"></div>
+            </div>
+            <pre id="statusDetails" class="status-log" aria-live="polite"></pre>
+            <div class="overlay-actions">
+                <button id="openStremioBtn" class="btn success" disabled>Open in Stremio</button>
+                <button id="copyManifestBtn" class="btn secondary" disabled>Copy Manifest URL</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/configure-common.js"></script>
+    <script src="/js/xtream-config.js"></script>
+    <script>
+        (function () {
+            fetch('/api/addon-info')
+                .then(r => r.json())
+                .then(info => {
+                    const title = document.getElementById('addonTitle');
+                    const subtitle = document.getElementById('addonSubtitle');
+                    const logo = document.getElementById('addonLogo');
+                    if (title && info.name) {
+                        title.textContent = info.name;
+                        document.title = 'Xtream Configuration • ' + info.name;
+                    }
+                    if (subtitle && info.description) subtitle.textContent = info.description;
+                    if (logo && info.logoUrl) {
+                        logo.src = info.logoUrl;
+                        logo.classList.remove('hidden');
+                    }
+                })
+                .catch(() => { /* keep defaults */ });
+        })();
+    </script>
+</body>
+
+</html>

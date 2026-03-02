@@ -1,0 +1,24 @@
+node_modules
+npm-debug.log
+
+# Docker config (not needed inside the image)
+Dockerfile
+docker-compose.yml
+
+# Git
+.git
+.gitignore
+
+# Environment files
+*.env
+
+# Documentation & dev-only files
+README.md
+AGENT.md
+.agent/
+.dev
+
+# Editor / IDE
+.vscode
+*.swp
+*.log

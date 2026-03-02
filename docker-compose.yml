@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  iptv-addon:
+    build: .
+    image: iptv-addon:latest
+    container_name: iptv-addon
+    ports:
+      - "7000:7000"
+    env_file:
+      - .env
+    restart: unless-stopped
