@@ -133,7 +133,7 @@
     <script src="/js/xtream-config.js"></script>
     <script>
         (function () {
-            fetch('/api/addon-info')
+            fetch('/api/addon-info?_t=' + Date.now())
                 .then(r => r.json())
                 .then(info => {
                     const title = document.getElementById('addonTitle');

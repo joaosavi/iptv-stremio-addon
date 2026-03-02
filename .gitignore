@@ -6,4 +6,5 @@ node_modules/
 *.log
 .agent/tasks/*
 .agent
-.temp/*
+.temp/
+AGENT.md

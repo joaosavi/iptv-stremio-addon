@@ -28,6 +28,9 @@ router.post('/encrypt', (req, res) => {
 
 // Addon info endpoint – used by the frontend to populate dynamic title/subtitle
 router.get('/api/addon-info', (req, res) => {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     res.json({
         name: env.ADDON_NAME,
         description: env.ADDON_DESCRIPTION,
