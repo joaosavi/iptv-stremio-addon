@@ -70,7 +70,7 @@ services:
 
 ## 🎬 How to Install in Stremio
 
-1. Open `http://your-host/configure-xtream`
+1. Open `http://your-host/configure`
 2. Enter your Xtream panel URL, username, and password
 3. Configure EPG options (optional)
 4. Click **Install / Update (Xtream)**
